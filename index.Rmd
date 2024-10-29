@@ -1,0 +1,54 @@
+---
+title: "Relatório de votos Pedro Duarte"
+author: "Pedro Ruas"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r, include=FALSE}
+
+library(tidyverse)
+library(plotly)
+library(sf)
+
+```
+
+```{r, include=FALSE}
+
+
+
+votos_bairros <- readRDS("~/votos_bairros.rds")
+
+
+```
+
+```{r, include=FALSE}
+
+# Seu gráfico ggplot
+mapa_ggplot <- ggplot() +
+  geom_sf(data = votos_bairros, aes(fill = total_votos, text = paste("Bairro:", name_neighborhood, "<br>Votos:", total_votos)), 
+          color = "black", alpha = 0.7) +
+  scale_fill_viridis_c(option = "viridis", direction = -1, na.value = "white", name = "Votos") +
+  ggtitle("") +
+   theme_classic() + # Usando um tema com controle mais flexível
+  theme(
+    plot.title = element_text(hjust = 0.5, vjust = 1, margin = margin(b = 10)) # Ajustando posição do título
+  )
+```
+
+```{r, include=FALSE}
+# Tornar interativo com plotly
+mapa_interativo <- ggplotly(mapa_ggplot, tooltip = "text")
+
+```
+```{r}
+## Distribuição de votos por bairro no Rio de Janeiro
+ 
+```
+```{r, echo=FALSE}
+
+## Mapa Interativo
+mapa_interativo
+
+```
+
