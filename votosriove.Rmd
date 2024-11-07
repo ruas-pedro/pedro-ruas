@@ -9,8 +9,8 @@ output:
     toc_float:
       collapsed: yes
       smooth_scroll: no
+    theme: flatly  
 ---
-
 ```{r, include=FALSE}
 
 library(rmarkdown)
