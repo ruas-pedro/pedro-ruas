@@ -4,7 +4,7 @@ author: "Pedro Ruas"
 date: "`r Sys.Date()`"
 output:
   html_document:
-
+    css: "style.css"
 ---
 
 
