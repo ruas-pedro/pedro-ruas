@@ -8,6 +8,12 @@ output:
 
 ---
 <style>
+/* Aumentar a largura do container principal para conteúdo (parágrafos e títulos) */
+.container {
+  max-width: 90% !important;  /* Ajuste a largura conforme necessário (90% da tela, por exemplo) */
+  width: 100% !important;     /* Assegura que o conteúdo ocupe toda a largura possível */
+}
+
 /* Garantir que a tabela tenha uma largura mínima */
 .dataTables_wrapper .dataTables_scrollBody {
   min-width: 500px;  /* Ajuste para a largura desejada */
