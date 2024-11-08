@@ -7,6 +7,12 @@ output:
     css: "custom_styles.css" 
 
 ---
+<style>
+/* Garantir que a tabela tenha uma largura mínima */
+.dataTables_wrapper .dataTables_scrollBody {
+  min-width: 1200px;  /* Ajuste para a largura desejada */
+}
+</style>
 
 ```{r, include=FALSE}
 
@@ -19,13 +25,7 @@ library(DT)
 library(reactable)
 ```
 
-<style>
-/* CSS para garantir que a tabela ocupe 100% da largura da tela em dispositivos móveis */
-.dataTables_wrapper .dataTables_scrollHeadInner, 
-.dataTables_wrapper .dataTables_scrollBody {
-  width: 100% !important;
-}
-</style>
+
 
 # Desempenho Pedro Duarte {.tabset}
 
