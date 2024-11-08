@@ -9,7 +9,6 @@ output:
     toc_float:
       collapsed: yes
       smooth_scroll: no
-      css: styles.css  
 ---
 ```{r, include=FALSE}
 
@@ -17,6 +16,7 @@ library(rmarkdown)
 library(tidyverse)
 library(plotly)
 library(sf)
+library(kableExtra)
 ```
 
 # Desempenho Pedro Duarte {.tabset}
@@ -219,8 +219,9 @@ cos_24_votos_bairros <- readRDS(file = "~/tab_cos_votosbairros24")
 
 ```{r, echo=FALSE}
 
-paged_table(cos_24_votos_bairros)
-
+kbl(head(cos_24_votos_bairros, 10)) %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+      
 ```
 
 <span style="font-size:18px">Total de votos: 12018</span>
