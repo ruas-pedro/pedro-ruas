@@ -9,8 +9,6 @@ output:
     toc_float:
       collapsed: yes
       smooth_scroll: no
-    includes:
-      before_body: |
 viewport: width=device-width, initial-scale=1
 ---
 
