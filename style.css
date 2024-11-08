@@ -1,0 +1,16 @@
+/* Impede o layout de se ajustar ao tamanho da tela */
+meta[name="viewport"] {
+    content: "width=1024"; /* Define uma largura fixa para a página */
+}
+
+/* Impede que as imagens se ajustem ao tamanho da tela */
+img {
+    max-width: none;
+    width: auto;
+}
+
+/* Impede que o conteúdo da página seja redimensionado */
+body {
+    width: 1024px; /* Define uma largura fixa */
+    overflow-x: scroll; /* Habilita a rolagem horizontal */
+}
