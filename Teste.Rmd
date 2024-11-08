@@ -12,6 +12,8 @@ library(tidyverse)
 library(plotly)
 library(sf)
 library(kableExtra)
+library(DT)
+library(reactable)
 ```
 
 # Desempenho Pedro Duarte {.tabset}
@@ -145,8 +147,11 @@ le_20_votos_bairros<-readRDS(file = "~/tab_le_votosbairros20")
 
 ```{r, echo=FALSE}
 
-paged_table(le_20_votos_bairros)
-
+reactable(le_20_votos_bairros, 
+          bordered = TRUE,
+          striped = TRUE,
+          highlight = TRUE,
+          compact = TRUE)  # Tabela compacta e responsiva
 ```
 <span style="font-size:18px">Total de votos: 9726</span>
 
@@ -159,7 +164,10 @@ le_24_votos_bairros<-readRDS(file = "~/tab_le_votosbairros24")
 
 ```{r, echo=FALSE}
 
-paged_table(le_24_votos_bairros)
+datatable(le_24_votos_bairros, options = list(
+  scrollX = TRUE,   # Adiciona rolagem horizontal
+  pageLength = 5    # Controla o número de linhas por página
+))
 
 ```
 <span style="font-size:18px">Total de votos: 3661</span> 
