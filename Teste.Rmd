@@ -10,7 +10,7 @@ output:
 <style>
 /* Garantir que a tabela tenha uma largura mínima */
 .dataTables_wrapper .dataTables_scrollBody {
-  min-width: 1000px;  /* Ajuste para a largura desejada */
+  min-width: 500px;  /* Ajuste para a largura desejada */
 }
 </style>
 
