@@ -1,0 +1,301 @@
+---
+title: "2teste"
+author: "Pedro Ruas"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    css: "custom_styles.css" 
+
+---
+
+
+body {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+/* Para telas menores que 768px */
+@media (max-width: 768px) {
+  body {
+    width: 100%; /* Ocupa toda a largura da tela */
+  }
+}
+
+```{r, include=FALSE}
+
+library(rmarkdown)
+library(tidyverse)
+library(plotly)
+library(sf)
+library(kableExtra)
+library(DT)
+library(reactable)
+```
+
+
+
+# Desempenho Pedro Duarte {.tabset}
+
+As regiões em branco são bairros onde não houve voto.
+
+## Mapa interativo Duarte 2020
+```{r, include=FALSE}
+
+mapa_interativo_du_20 <- readRDS("~/filemapa_interativo_du_20.rds")
+
+
+```
+
+```{r, echo=FALSE}
+
+mapa_interativo_du_20
+
+```
+
+## Mapa Interativo Duarte 2024
+```{r, include=FALSE}
+
+mapa_interativo_du_24 <- readRDS("~/filemapa_interativo_du_24.rds")
+
+
+```
+
+```{r, echo=FALSE}
+
+mapa_interativo_du_24
+
+```
+
+# Tabela de Dados {.tabset}
+
+## Dados 2020
+
+
+```{r, include=FALSE}
+#Pedro Duarte 2020
+
+du_20_votos_bairros<-readRDS(file = "~/tab_du_votos_bairros")
+```
+
+```{r, echo=FALSE}
+paged_table(du_20_votos_bairros)
+
+```
+<span style="font-size:18px">Total de votos: 10069</span>
+
+## Dados 2024
+
+```{r, include=FALSE}
+
+Duarte_votos_bairros24 <-readRDS("~/Duarte_votos_bairros24")
+
+```
+```{r, echo=FALSE}
+
+paged_table(Duarte_votos_bairros24)
+
+```
+<span style="font-size:18px">Total de votos: 15404</span>  
+
+
+```{r, include=FALSE}
+
+D20 <- sum(du_20_votos_bairros$Votos)
+
+D20
+
+```
+
+```{r, include=FALSE}
+
+D24 <- sum(Duarte_votos_bairros24$Votos)
+
+D24
+
+```
+
+```{r, include=FALSE}
+#Letícia Arsenio 2020
+
+votos_bairros_le_20 <- readRDS("~/votos_bairros_le.rds")
+
+#Letícia Arsenio 2024
+
+votos_bairros_le_24 <- readRDS("~/votos_bairros_le_24.rds")
+
+```
+
+# Desempenho Letícia Arsenio {.tabset}
+
+```{r, include=FALSE}
+
+mapa_interativo_le_20 <- readRDS("~/filemapa_interativo_le_20")
+
+
+```
+
+## Mapa interativo 2020
+```{r, echo=FALSE}
+
+mapa_interativo_le_20
+
+```
+
+## Mapa Interativo 2024
+```{r, include=FALSE}
+
+mapa_interativo_le_24 <- readRDS("~/filemapa_interativo_le_24")
+
+
+```
+
+```{r, echo=FALSE}
+
+mapa_interativo_le_24
+
+```
+
+# Tabela de Dados{.tabset}
+## Dados 2020
+```{r, include=FALSE}
+
+le_20_votos_bairros<-readRDS(file = "~/tab_le_votosbairros20")
+
+```
+
+```{r, echo=FALSE}
+
+reactable(le_20_votos_bairros, 
+          bordered = TRUE,
+          striped = TRUE,
+          highlight = TRUE,
+          compact = TRUE)  # Tabela compacta e responsiva
+```
+<span style="font-size:18px">Total de votos: 9726</span>
+
+## Dados 2024
+```{r, include=FALSE}
+
+le_24_votos_bairros<-readRDS(file = "~/tab_le_votosbairros24")
+
+```
+
+```{r, echo=FALSE}
+
+datatable(le_24_votos_bairros, options = list(
+  scrollX = TRUE,   # Adiciona rolagem horizontal
+  pageLength = 5    # Controla o número de linhas por página
+))
+
+```
+<span style="font-size:18px">Total de votos: 3661</span> 
+
+
+```{r, include=FALSE}
+
+sum(le_20_votos_bairros$Votos)
+
+```
+
+```{r, include=FALSE}
+
+le_24 <- sum(le_24_votos_bairros$Votos)
+
+le_24
+
+```
+
+# Desempenho Gabriel Costenaro{.tabset}
+## Mapa Interativo
+
+
+```{r, include=FALSE}
+
+#Gabriel Costenaro 2024
+
+votos_bairros_cos_24 <- readRDS("~/votos_bairros_cos_24.rds")
+
+
+```
+
+```{r, include=FALSE}
+
+mapa_interativo_cos_24 <- readRDS("~/filemapa_interativo_cos_24")
+
+
+```
+
+```{r, echo=FALSE}
+
+mapa_interativo_cos_24
+
+```
+# Tabela de Dados{.tabset}
+## Dados 2024
+```{r, echo=FALSE}
+
+cos_24_votos_bairros <- readRDS(file = "~/tab_cos_votosbairros24")
+
+```
+
+```{r, echo=FALSE}
+
+kbl(head(cos_24_votos_bairros, 10)) %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+      
+```
+
+<span style="font-size:18px">Total de votos: 12018</span>
+
+```{r, include=FALSE}
+
+cos_24 <- sum(cos_24_votos_bairros$Votos)
+
+cos_24
+
+# para fazer contagem pode utilizar tbm a função lenght
+
+```
+# Evolução dos votos
+```{r, include=FALSE}
+
+comparativo <-data.frame(Duarte = c(10069, 15404),
+            Arsenio = c(9726, 3661),
+            Costenaro = c(0, 12018),
+            Ano = c("2020", "2024"))
+
+
+
+```
+
+```{r, include=FALSE}
+
+comparativo <- data.frame(votos = c(10069, 15404, 9762, 3661, 0, 12018),
+           Candidato = c("Duarte", "Duarte", "Arsenio", "Arsenio", "Costenaro", "Costenaro"),
+           ano = c(2020, 2024, 2020, 2024, 2020, 2024))
+
+```
+
+```{r, echo=FALSE}
+
+ggplot2::ggplot(comparativo, aes(x = ano, y = votos, color = Candidato)) +
+  ggplot2::geom_line(linewidth = 1)+
+  ggplot2::labs(title = "", x = "Ano", y = "Votos") +
+  geom_point(size = 3) +
+  ggplot2::theme_minimal()
+
+
+```
+<br>
+<span style="font-size:18px">   Com este gráfico, é possível observar que a queda de votos da candidata Letícia Arsenio é muito próxima ao aumento de votos de Pedro Duarte. Arsenio perdeu 6.065 votos, enquanto Duarte ganhou 5.335. Ao mesmo tempo, os votos do candidato Costenaro parecem ser significativamente independentes dos dois. Nos gráficos de mapa, podemos ver que os votos de Arsenio e Duarte se concentram na Zona Sul do Rio, especialmente na Barra da Tijuca, uma área de classes mais altas. Por outro lado, os votos de Costenaro estão mais bem distribuídos, com desempenho superior, em relação aos outros candidatos, nas áreas periféricas do Rio, como os bairros Campo Grande, Bangu e Santa Cruz. Ainda assim, os bairros onde ele obteve mais votos foram Campo Grande e Barra da Tijuca.
+<br>  
+É possível que a principal fonte dessas alterações seja a perda do apoio do MBL e do Partido Novo pela candidata Letícia Arsenio. Tanto Pedro Duarte quanto Gabriel Costenaro fazem parte do Partido Novo e do MBL. Já Arsenio deixou o Partido Novo e se filiou ao Podemos. Os três candidatos são críticos de Bolsonaro, por isso esse fator talvez não tenha tido tanto impacto, mesmo o posicionamento de cada um em relação a ele ser diferente.</span>
+<br>
+<br>
+
+# Contato
+
+Email: pedro_ruas95@yahoo.com.br  
+Whatsapp: 21 99712-4135  
+Linkedin:
+[linkedin.com/in/pedro-ruas95](https://linkedin.com/in/pedro-ruas95)
