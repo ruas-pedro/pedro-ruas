@@ -1,24 +1,18 @@
 ---
-title: "Teste"
+title: "2teste"
 author: "Pedro Ruas"
 date: "`r Sys.Date()`"
 output:
   html_document:
-    css: "custom_styles.css" 
-
+    includes:
+      number_sections: yes
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+      in_header: meta_tags.html    
+    css: "style.css"
 ---
-<style>
-/* Aumentar a largura do container principal para conteúdo (parágrafos e títulos) */
-.container {
-  max-width: 90% !important;  /* Ajuste a largura conforme necessário (90% da tela, por exemplo) */
-  width: 100% !important;     /* Assegura que o conteúdo ocupe toda a largura possível */
-}
-
-/* Garantir que a tabela tenha uma largura mínima */
-.dataTables_wrapper .dataTables_scrollBody {
-  min-width: 500px;  /* Ajuste para a largura desejada */
-}
-</style>
 
 ```{r, include=FALSE}
 
@@ -26,16 +20,12 @@ library(rmarkdown)
 library(tidyverse)
 library(plotly)
 library(sf)
-library(kableExtra)
-library(DT)
-library(reactable)
+
 ```
-
-
 
 # Desempenho Pedro Duarte {.tabset}
 
-As regiões em branco são bairros onde não houve voto.
+As regiões em branco representam bairros onde não houve votos. Você pode dar zoom no mapa clicando e arrastando o mouse, ou reduzir o zoom com dois cliques. Para ver o nome do bairro e a quantidade de votos, basta posicionar o cursor sobre a área desejada.
 
 ## Mapa interativo Duarte 2020
 ```{r, include=FALSE}
@@ -76,6 +66,12 @@ mapa_interativo_du_24
 du_20_votos_bairros<-readRDS(file = "~/tab_du_votos_bairros")
 ```
 
+```{r, include=FALSE}
+
+du_20_votos_bairros$Candidato <- rep("Duarte", nrow(du_20_votos_bairros))
+
+```
+
 ```{r, echo=FALSE}
 paged_table(du_20_votos_bairros)
 
@@ -89,6 +85,13 @@ paged_table(du_20_votos_bairros)
 Duarte_votos_bairros24 <-readRDS("~/Duarte_votos_bairros24")
 
 ```
+
+```{r, include=FALSE}
+
+Duarte_votos_bairros24$Candidato <- rep("Duarte", nrow(Duarte_votos_bairros24))
+
+```
+
 ```{r, echo=FALSE}
 
 paged_table(Duarte_votos_bairros24)
@@ -110,6 +113,27 @@ D20
 D24 <- sum(Duarte_votos_bairros24$Votos)
 
 D24
+
+```
+
+```{r, include=FALSE}
+
+união_du <- full_join(du_20_votos_bairros, Duarte_votos_bairros24, by = "Bairro")
+
+união_du <- união_du %>% mutate(Votos.x = coalesce(Votos.x, 0),
+                                Votos.y = coalesce(Votos.y, 0),
+                                Variação = Votos.y - Votos.x)
+
+```
+
+## Variação por Bairro
+
+```{r, echo=FALSE}
+união_du_select <- união_du %>% select(Variação, Bairro) %>% arrange(desc(Variação))
+
+
+
+paged_table(união_du_select)
 
 ```
 
@@ -162,13 +186,16 @@ le_20_votos_bairros<-readRDS(file = "~/tab_le_votosbairros20")
 
 ```
 
+```{r, include=FALSE}
+
+le_20_votos_bairros$Candidato <- rep("Arsenio", nrow(le_20_votos_bairros))
+
+```
+
 ```{r, echo=FALSE}
 
-reactable(le_20_votos_bairros, 
-          bordered = TRUE,
-          striped = TRUE,
-          highlight = TRUE,
-          compact = TRUE)  # Tabela compacta e responsiva
+paged_table(le_20_votos_bairros)
+
 ```
 <span style="font-size:18px">Total de votos: 9726</span>
 
@@ -179,16 +206,37 @@ le_24_votos_bairros<-readRDS(file = "~/tab_le_votosbairros24")
 
 ```
 
+```{r, include=FALSE}
+
+le_24_votos_bairros$Candidato <- rep("Arsenio", nrow(le_24_votos_bairros))
+
+```
+
 ```{r, echo=FALSE}
 
-datatable(le_24_votos_bairros, options = list(
-  scrollX = TRUE,   # Adiciona rolagem horizontal
-  pageLength = 5    # Controla o número de linhas por página
-))
+paged_table(le_24_votos_bairros)
 
 ```
 <span style="font-size:18px">Total de votos: 3661</span> 
 
+```{r, include=FALSE}
+
+união_le <- full_join(le_20_votos_bairros, le_24_votos_bairros, by = "Bairro")
+
+união_le <- união_le %>% mutate(Votos.x = coalesce(Votos.x, 0),
+                                Votos.y = coalesce(Votos.y, 0),
+                                Variação = Votos.y - Votos.x)
+
+```
+## Variação por Bairro
+```{r, echo=FALSE}
+união_le_select <- união_le %>% select(Variação, Bairro) %>% arrange(Variação)
+
+
+
+paged_table(união_le_select)
+
+```
 
 ```{r, include=FALSE}
 
@@ -237,10 +285,15 @@ cos_24_votos_bairros <- readRDS(file = "~/tab_cos_votosbairros24")
 
 ```
 
+```{r, include=FALSE}
+cos_24_votos_bairros$Candidato <- rep("Costenaro", nrow(cos_24_votos_bairros))
+
+
+```
+
 ```{r, echo=FALSE}
 
-kbl(head(cos_24_votos_bairros, 10)) %>%
-   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+paged_table(cos_24_votos_bairros)
       
 ```
 
@@ -255,6 +308,7 @@ cos_24
 # para fazer contagem pode utilizar tbm a função lenght
 
 ```
+
 # Evolução dos votos
 ```{r, include=FALSE}
 
@@ -285,10 +339,25 @@ ggplot2::ggplot(comparativo, aes(x = ano, y = votos, color = Candidato)) +
 
 
 ```
+
+```{r, include=FALSE}
+
+sd(Duarte_votos_bairros24$Votos)/mean(Duarte_votos_bairros24$Votos)
+
+sd(le_24_votos_bairros$Votos)/mean(le_24_votos_bairros$Votos)
+
+sd(cos_24_votos_bairros$Votos)/mean(cos_24_votos_bairros$Votos)
+
+sd(du_20_votos_bairros$Votos)/mean(du_20_votos_bairros$Votos)
+
+sd(le_20_votos_bairros$Votos)/mean(le_24_votos_bairros$Votos)
+```
 <br>
-<span style="font-size:18px">   Com este gráfico, é possível observar que a queda de votos da candidata Letícia Arsenio é muito próxima ao aumento de votos de Pedro Duarte. Arsenio perdeu 6.065 votos, enquanto Duarte ganhou 5.335. Ao mesmo tempo, os votos do candidato Costenaro parecem ser significativamente independentes dos dois. Nos gráficos de mapa, podemos ver que os votos de Arsenio e Duarte se concentram na Zona Sul do Rio, especialmente na Barra da Tijuca, uma área de classes mais altas. Por outro lado, os votos de Costenaro estão mais bem distribuídos, com desempenho superior, em relação aos outros candidatos, nas áreas periféricas do Rio, como os bairros Campo Grande, Bangu e Santa Cruz. Ainda assim, os bairros onde ele obteve mais votos foram Campo Grande e Barra da Tijuca.
+<span style="font-size:18px">   Com este gráfico, é possível observar que a queda de votos da candidata Letícia Arsenio é muito próxima ao aumento de votos de Pedro Duarte. Arsenio perdeu 6.065 votos, enquanto Duarte ganhou 5.335. Ao mesmo tempo, os votos do candidato Costenaro parecem ser significativamente independentes dos dois. Nos gráficos de mapa, podemos ver que os votos de Arsenio e Duarte se concentram na Zona Sul do Rio, especialmente na Barra da Tijuca, uma área de classes mais altas. Por outro lado, os votos de Costenaro estão mais bem distribuídos, com desempenho superior, em relação aos outros candidatos, nas áreas periféricas do Rio, como os bairros Campo Grande, Bangu e Santa Cruz. Ainda assim, os bairros onde ele obteve mais votos foram Campo Grande e Barra da Tijuca. 
 <br>  
-É possível que a principal fonte dessas alterações seja a perda do apoio do MBL e do Partido Novo pela candidata Letícia Arsenio. Tanto Pedro Duarte quanto Gabriel Costenaro fazem parte do Partido Novo e do MBL. Já Arsenio deixou o Partido Novo e se filiou ao Podemos. Os três candidatos são críticos de Bolsonaro, por isso esse fator talvez não tenha tido tanto impacto, mesmo o posicionamento de cada um em relação a ele ser diferente.</span>
+Outro índice que indica essa maior dispersão dos votos do candidato Costenaro é o coeficiente de variação. Duarte apresenta o maior coeficiente de variação, seguido por Arsenio e, por último, Costenaro (2,25; 1,29; 1,13). O número baixo da Arsenio se deve à grande perda de votos nas regiões onde tinha maior concentração, como a Barra da Tijuca, onde perdeu 595 votos. Em 2020, seu coeficiente de variação era de 4,04, enquanto Duarte tinha 2,32, um número bem próximo ao de 2024.
+<br>  
+É possível que a principal fonte da queda de desempenho da candidata Letícia Asenio, seja a perda do apoio do MBL e do Partido Novo. Tanto Pedro Duarte quanto Gabriel Costenaro fazem parte do Partido Novo e do MBL. Já Arsenio deixou o Partido Novo e se filiou ao Podemos. Os três candidatos são críticos de Bolsonaro, por isso esse fator talvez não tenha tido tanto impacto, mesmo o posicionamento dos três em relação ao ex-presidente sendo diferente.</span>
 <br>
 <br>
 
